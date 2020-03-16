@@ -20,6 +20,23 @@ CREATE TABLE `category` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
+
+--
+-- Table structure for table `product`
+--
+
+DROP TABLE IF EXISTS `product`;
+CREATE TABLE `product` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cant` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `status` bit(1) DEFAULT NULL,
+  `categ_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+alter table product add constraint FKthxjxl0sen3qqhetdhvjh2ixo foreign key (categ_id) references category (id);
+
 --
 -- Table structure for table `kardex`
 --
@@ -33,24 +50,7 @@ CREATE TABLE `kardex` (
   `unitCost` float DEFAULT NULL,
   `units` int(11) DEFAULT NULL,
   `prod_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKtqv56k9puv8ix8pxno40e5dky` (`prod_id`),
-  CONSTRAINT `FKtqv56k9puv8ix8pxno40e5dky` FOREIGN KEY (`prod_id`) REFERENCES `product` (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
---
--- Table structure for table `product`
---
-
-DROP TABLE IF EXISTS `product`;
-CREATE TABLE `product` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `cant` int(11) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `status` bit(1) DEFAULT NULL,
-  `categ_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKthxjxl0sen3qqhetdhvjh2ixo` (`categ_id`),
-  CONSTRAINT `FKthxjxl0sen3qqhetdhvjh2ixo` FOREIGN KEY (`categ_id`) REFERENCES `category` (`id`)
-) ENGINE=InnoDB;
-
+alter table kardex add constraint FKtqv56k9puv8ix8pxno40e5dky foreign key (prod_id) references product (id);
