@@ -31,7 +31,7 @@ public class KardexService {
 	private static EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
 			.createEntityManagerFactory("AppKardex");
 	
-	// Método para obtener todos los movimientos. Recibe 2 parámetros para realizar la paginación
+	// Mï¿½todo para obtener todos los movimientos. Recibe 2 parï¿½metros para realizar la paginaciï¿½n
 	@GET
     public Response getKardex(@QueryParam("limit") int limit, @QueryParam("offset") int offset) {
 		EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
@@ -44,43 +44,43 @@ public class KardexService {
 			// Se obtiene la cantidad de productos de la bd
 			int count = ((Number)em.createNamedQuery("Kardex.findCount").getSingleResult()).intValue();
 			
-			// Si alguno de los parámetros de la paginación no se recibe, darles un valor por defecto
+			// Si alguno de los parï¿½metros de la paginaciï¿½n no se recibe, darles un valor por defecto
 			if(offset == 0 || offset < 0) offset = 0;
 			if(limit == 0 || limit < 0) limit = 5;
 			
-			// Se realiza la paginación
+			// Se realiza la paginaciï¿½n
 			query.setFirstResult(offset);
 			query.setMaxResults(limit);
 			
-			// Se crea un HashMap para guardar todos los datos que se enviarán en la respuesta
+			// Se crea un HashMap para guardar todos los datos que se enviarï¿½n en la respuesta
 			HashMap<String, Object> map = new HashMap<>();
 			
 			// Se obtienen los movimientos paginados del query
 			List<Kardex> kardx = query.getResultList();
 			
-			// Se definen las variables para llevar el control de la paginación
+			// Se definen las variables para llevar el control de la paginaciï¿½n
 			String next = "null";
 			String previous = "null";
 			
-			// Si la consulta no es vacía, construir la url para la siguiente página
+			// Si la consulta no es vacï¿½a, construir la url para la siguiente pï¿½gina
 			if(!kardx.isEmpty()) {
 				int nextData = offset + limit;
 				next = "/kardex/?limit=" + limit + "&offset=" + nextData;
 			}
 			
-			// Si el offset no es nulo, construir la url para la página previa
+			// Si el offset no es nulo, construir la url para la pï¿½gina previa
 			if(offset != 0) {
 				int prevData = offset - limit;
 				previous = "/kardex/?limit=" + limit + "&offset=" + prevData;
 			}
 			
-			// Se colocan los resultados que se enviarán en la respuesta
+			// Se colocan los resultados que se enviarï¿½n en la respuesta
 			map.put("previous", previous);
 			map.put("next", next);
 			map.put("count", count);
 			map.put("results", kardx);
 			
-			// Se envía la respuesta
+			// Se envï¿½a la respuesta
 			return Response.ok(map,MediaType.APPLICATION_JSON).build();   
 		} catch (NoResultException ex) {
 			
@@ -96,8 +96,8 @@ public class KardexService {
        
     }
 	
-	// Método para guardar una categorías. 
-	// Recibe como parámetro una entidad con los datos del movimiento a guardar
+	// Mï¿½todo para guardar una categorï¿½as. 
+	// Recibe como parï¿½metro una entidad con los datos del movimiento a guardar
 	// Y el id del producto asignado al movimiento
 	@POST
 	public Response createKardex(Kardex kard, @QueryParam("prod") int prod_id) {
@@ -121,7 +121,7 @@ public class KardexService {
 					return Response.status(Response.Status.BAD_REQUEST).entity(map).build();
 				} else {
 					// Validar que las unidades de la venta no superen a las unidades en stock
-					if(kard.getTransType() == 2 && product.getCant() - kard.getUnits() <= 0) {
+					if(kard.getTransType() == 2 && product.getCant() - kard.getUnits() < 0) {
 						HashMap<String, Object> map = new HashMap<>();
 						String err = "No se puede realizar la venta, la cantidad a vender supera el stock";
 						map.put("error", err);
@@ -162,7 +162,7 @@ public class KardexService {
 				
 			} else {
 				HashMap<String, Object> map = new HashMap<>();
-				String err = "No se encontró el producto con el id " + prod_id;
+				String err = "No se encontrï¿½ el producto con el id " + prod_id;
 				map.put("error", err);
 				return Response.status(Response.Status.NOT_FOUND).entity(map).build();
 			}
